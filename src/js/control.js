@@ -65,8 +65,16 @@ export class Control {
         }
         if (Kline.instance.type === "stomp" && Kline.instance.stompClient) {
             Control.requestOverStomp();
-        } else {
+        } else if (Kline.instance.type === "poll") {
             Control.requestOverHttp();
+        } else {
+            if (Kline.instance.debug) {
+                console.log(Kline.instance.data);
+            }
+            if (Kline.instance.data) {
+                $("#chart_loading").removeClass("activated");
+                Control.redrawChart();
+            }
         }
     }
 
@@ -148,7 +156,16 @@ export class Control {
 
         let chart = ChartManager.instance.getChart();
         chart.setTitle();
-        Kline.instance.data = eval(res.data);
+
+        Control.redrawChart(res.data);
+    }
+
+    static redrawChart(data) {
+
+        if (data) {
+            // 重置数据
+            Kline.instance.data = eval(data);
+        }
 
         let updateDataRes = Kline.instance.chartMgr.updateData("frame0.k0", Kline.instance.data.lines);
         Kline.instance.requestParam = Control.setHttpRequestParam(Kline.instance.symbol, Kline.instance.range, null, Kline.instance.chartMgr.getDataSource("frame0.k0").getLastDate());
@@ -309,10 +326,10 @@ export class Control {
         toolPanelRect.w = toolPanelShown ? 32 : 0;
         toolPanelRect.h = height - toolPanelRect.y;
         let tabBarRect = {};
-        tabBarRect.w = toolPanelShown ? chartWidth - (toolPanelRect.w + 1 ) : chartWidth;
+        tabBarRect.w = toolPanelShown ? chartWidth - (toolPanelRect.w + 1) : chartWidth;
         tabBarRect.h = tabBarShown ? 22 : -1;
         tabBarRect.x = chartWidth - tabBarRect.w;
-        tabBarRect.y = height - (tabBarRect.h + 1 );
+        tabBarRect.y = height - (tabBarRect.h + 1);
         let canvasGroupRect = {};
         canvasGroupRect.x = tabBarRect.x;
         canvasGroupRect.y = toolPanelRect.y;

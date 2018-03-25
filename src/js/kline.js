@@ -132,6 +132,11 @@ export default class Kline {
         $(this.element).css({visibility: "visible"});
     }
 
+    // 增加重绘方法
+    redraw(data) {
+        Control.redrawChart(data);
+    }
+
     resize(width, height) {
         this.width = width;
         this.height = height;
