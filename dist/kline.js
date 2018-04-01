@@ -1731,6 +1731,7 @@ function () {
     key: "setCurrentDataSource",
     value: function setCurrentDataSource(dsName, dsAlias) {
       var cached = this.getCachedDataSource(dsAlias);
+      console.log(cached);
 
       if (cached !== undefined && cached !== null) {
         this.setDataSource(dsName, cached, true);
@@ -3988,63 +3989,54 @@ function (_DataSource) {
       this._updatedCount = 0;
       this._appendedCount = 0;
       this._erasedCount = 0;
-      var len = this._dataItems.length;
-
-      if (len > 0) {
-        var lastIndex = len - 1;
-        var lastItem = this._dataItems[lastIndex];
-
-        var _e,
-            _i,
-            _cnt = data.length;
-
-        for (_i = 0; _i < _cnt; _i++) {
-          _e = data[_i];
-
-          if (_e[0] === lastItem.date) {
-            if (lastItem.open === _e[1] && lastItem.high === _e[2] && lastItem.low === _e[3] && lastItem.close === _e[4] && lastItem.volume === _e[5]) {
-              this.setUpdateMode(DataSource.UpdateMode.DoNothing);
-            } else {
-              this.setUpdateMode(DataSource.UpdateMode.Update);
-              this._dataItems[lastIndex] = {
-                date: _e[0],
-                open: _e[1],
-                high: _e[2],
-                low: _e[3],
-                close: _e[4],
-                volume: _e[5]
-              };
-              this._updatedCount++;
-            }
-
-            _i++;
-
-            if (_i < _cnt) {
-              this.setUpdateMode(DataSource.UpdateMode.Append);
-
-              for (; _i < _cnt; _i++, this._appendedCount++) {
-                _e = data[_i];
-
-                this._dataItems.push({
-                  date: _e[0],
-                  open: _e[1],
-                  high: _e[2],
-                  low: _e[3],
-                  close: _e[4],
-                  volume: _e[5]
-                });
-              }
-            }
-
-            return true;
-          }
-        }
-
-        if (_cnt < _kline.default.instance.limit) {
-          this.setUpdateMode(DataSource.UpdateMode.DoNothing);
-          return false;
-        }
-      }
+      var len = this._dataItems.length; // if (len > 0) {
+      //     let lastIndex = len - 1;
+      //     let lastItem = this._dataItems[lastIndex];
+      //     let e, i, cnt = data.length;
+      //     for (i = 0; i < cnt; i++) {
+      //         e = data[i];
+      //         if (e[0] === lastItem.date) {
+      //             if (lastItem.open === e[1] &&
+      //                 lastItem.high === e[2] &&
+      //                 lastItem.low === e[3] &&
+      //                 lastItem.close === e[4] &&
+      //                 lastItem.volume === e[5]) {
+      //                 this.setUpdateMode(DataSource.UpdateMode.DoNothing);
+      //             } else {
+      //                 this.setUpdateMode(DataSource.UpdateMode.Update);
+      //                 this._dataItems[lastIndex] = {
+      //                     date: e[0],
+      //                     open: e[1],
+      //                     high: e[2],
+      //                     low: e[3],
+      //                     close: e[4],
+      //                     volume: e[5]
+      //                 };
+      //                 this._updatedCount++;
+      //             }
+      //             i++;
+      //             if (i < cnt) {
+      //                 this.setUpdateMode(DataSource.UpdateMode.Append);
+      //                 for (; i < cnt; i++, this._appendedCount++) {
+      //                     e = data[i];
+      //                     this._dataItems.push({
+      //                         date: e[0],
+      //                         open: e[1],
+      //                         high: e[2],
+      //                         low: e[3],
+      //                         close: e[4],
+      //                         volume: e[5]
+      //                     });
+      //                 }
+      //             }
+      //             return true;
+      //         }
+      //     }
+      //     if (cnt < Kline.instance.limit) {
+      //         this.setUpdateMode(DataSource.UpdateMode.DoNothing);
+      //         return false;
+      //     }
+      // }
 
       this.setUpdateMode(DataSource.UpdateMode.Refresh);
       this._dataItems = [];
@@ -8978,7 +8970,12 @@ function () {
       if (data) {
         // 重置数据
         _kline.default.instance.data = eval(data);
-      }
+      } // if (Kline.instance.type === "local") {
+      //     let updateDataRes = Kline.instance.chartMgr.updateData("frame0.k0", Kline.instance.data.lines);
+      //     Control.clearRefreshCounter();
+      //     ChartManager.instance.redraw('All', false);
+      // } else {
+
 
       var updateDataRes = _kline.default.instance.chartMgr.updateData("frame0.k0", _kline.default.instance.data.lines);
 
@@ -9009,7 +9006,8 @@ function () {
         _kline.default.instance.timer = setTimeout(Control.TwoSecondThread, intervalTime);
       }
 
-      _chart_manager.ChartManager.instance.redraw('All', false);
+      _chart_manager.ChartManager.instance.redraw('All', false); // }
+
     }
   }, {
     key: "AbortRequest",
